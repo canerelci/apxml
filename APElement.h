@@ -34,6 +34,10 @@
 @property (readonly) NSString *name;
 @property (nonatomic, assign) APElement *parent;
 
+// added by Caner Elci (caner@canerelci.com) on 2011-09-20
+// set YES to make value encapsulated in CDATA section
+@property (nonatomic, assign) BOOL encapsulateValueInCDATA;
+
 + (id)elementWithName:(NSString*)aName;
 + (id)elementWithName:(NSString*)aName attributes:(NSDictionary*)someAttributes;
 - (id)initWithName:(NSString*)aName;

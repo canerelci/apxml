@@ -26,6 +26,7 @@
 
 @synthesize name;
 @synthesize parent;
+@synthesize encapsulateValueInCDATA;
 
 /*
  Returns a new element with the specified tag name
@@ -232,7 +233,20 @@
 	}
 	else	// there must be a value
 	{
-		[xmlResult appendFormat:@">%@</%@>\n", [self encodeEntities:value], name];
+        if(!self.encapsulateValueInCDATA)
+            [xmlResult appendFormat:@">%@</%@>\n", [self encodeEntities:value], name];
+        else
+        {
+			// encapsulate value in CDATA section, without encoding it
+			
+            [xmlResult appendString:@">\n"];
+            for (int i=0; i<tabs+1; i++)
+                [xmlResult appendString:@"\t"];
+            [xmlResult appendFormat:@"<![CDATA[%@]]>\n", value];
+            for (int i=0; i<tabs; i++)
+                [xmlResult appendString:@"\t"];
+            [xmlResult appendFormat:@"</%@>\n", name];
+        }
 		return xmlResult;
 	}
 }
@@ -270,7 +284,10 @@
 	}
 	else	// there must be a value
 	{
-		[xmlResult appendFormat:@">%@</%@>", [self encodeEntities:value], name];
+        if(!self.encapsulateValueInCDATA)
+            [xmlResult appendFormat:@">%@</%@>", [self encodeEntities:value], name];
+        else
+            [xmlResult appendFormat:@"><![CDATA[%@]]></%@>", value, name];
 		return xmlResult;
 	}
 }
